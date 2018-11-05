@@ -14,7 +14,6 @@ connection.connect(function (err) {
     startAndBuy();
 });
 
-
 const startAndBuy = () => {
     connection.query('SELECT * FROM products', function (err, results) {
         inquirer.prompt([{
@@ -29,25 +28,59 @@ const startAndBuy = () => {
                 }
                 return products;
             },
-        }, 
+        },
         {
             name: 'units',
             type: 'input',
             message: 'How many units of the product would you want to purchase?'
 
         }
-    ]).then(function (answer) {
+        ]).then(function (answer) {
             let chosenItem;
             for (let i = 0; i < results.length; i++) {
                 if (answer.choice === results[i].product_name) {
                     chosenItem = results[i];
-                } 
+                }
             }
 
             if (chosenItem.stock_quantity >= parseInt(answer.units)) {
-                console.log(`Done!\n Thank you for your purchase for ${answer.units} units of ${chosenItem.product_name}.`)
+
+                let unitsBought = parseInt(answer.units);
+                let priceOfUnits = unitsBought * chosenItem.price;
+
+                let stockLeft = parseInt(chosenItem.stock_quantity - unitsBought);
+
+                connection.query(
+                    'UPDATE products SET ? WHERE ?',
+                    [
+                        {
+                            stock_quantity: stockLeft
+                        },
+                        {
+                            item_id: chosenItem.item_id
+                        }
+                    ],
+                    function (error) {
+                        if (error) {
+                            throw err;
+
+                        } else {
+                            console.log(`\nDone!\nThank you for your purchase of ${answer.units} units of ${chosenItem.product_name}.\nYour total cost for this purchase is ${priceOfUnits}\n \n \n`);
+                            setTimeout(function () {
+                                startAndBuy();
+                            }, 1500);
+                        }
+
+
+                    }
+                );
+
             } else {
-                console.log('Sorry. There are not enough units your purchase. \n Please try again later.');
+                console.log('\nSorry. There are not enough units your purchase. \n Please try again later or select a different product to purchase.\n \n \n \n');
+                setTimeout(function () {
+                    startAndBuy();
+                }, 1500);
+
             }
 
         })
