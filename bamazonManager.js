@@ -1,3 +1,4 @@
+//author: George Rincon
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const cTable = require('console.table');
@@ -6,7 +7,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '---',
+    password: '',
     database: 'bamazon_db'
 });
 
@@ -172,7 +173,7 @@ const addNewProduct = () => {
         let stock = parseInt(answer.stock);
         connection.query('INSERT INTO products SET ?', {
             product_name: answer.item_name,
-            department_name: answer.dept_name,
+            dept_name: answer.dept_name,
             price: price,
             stock_quantity: stock
 

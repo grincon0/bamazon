@@ -1,3 +1,4 @@
+//author: George Rincon
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
@@ -5,7 +6,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: '---',
+    password: '',
     database: 'bamazon_db'
 });
 
@@ -46,7 +47,8 @@ const startAndBuy = () => {
             if (chosenItem.stock_quantity >= parseInt(answer.units)) {
 
                 let unitsBought = parseInt(answer.units);
-                let priceOfUnits = unitsBought * chosenItem.price;
+                let priceOfUnits = (unitsBought * chosenItem.price).toFixed(2);
+                
 
                 let stockLeft = parseInt(chosenItem.stock_quantity - unitsBought);
 
@@ -54,6 +56,7 @@ const startAndBuy = () => {
                     'UPDATE products SET ? WHERE ?',
                     [
                         {
+                            product_sales: priceOfUnits,
                             stock_quantity: stockLeft
                         },
                         {
