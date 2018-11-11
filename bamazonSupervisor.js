@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const cTable = require('console.table');
 
+//config objects that connects the app with the bamazon_db
 const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -16,6 +17,8 @@ connection.connect(function (err) {
     start();
 });
 
+//starts the CLI app by giviving the user two choices to select
+//If the user selects 'View Products Sales by Department, the app will start the process of printing total profits of each department
 const start = () => {
     console.log('\n******** Bamazon Supervisor Interface **********\n');
 
@@ -33,18 +36,15 @@ const start = () => {
                 break;
             case 'Create New Department':
                 createNewDept();
-
                 break;
-
             default:
                 break;
         }
-
-
     });
 }
 
-
+//Dynamically gets the departments of the products currently in stock, filters out any duplicates dept returned, then ..
+//.. inserts those departments into the 'departments' table with overhead costs
 const getDeptsFromProducts = () => {
     let depts = [];
     connection.query('SELECT * FROM products', function (err, results) {
@@ -66,12 +66,12 @@ const getDeptsFromProducts = () => {
 
         let realDepts = Object.keys(count);
         console.log(realDepts);
-
+        //for every deparment, inset each one into the 'departments table'
         for (let name of realDepts) {
             insertIntoDepts(name);
 
         }
-
+        //once we finish dynamically inserting all the departments into the table, calculate total sales per dept
         getSales();
 
 
@@ -80,7 +80,7 @@ const getDeptsFromProducts = () => {
 }
 
 
-
+//inserts each department name and overhaead cost to the 'departments' table
 const insertIntoDepts = (name) => {
     let rnd = (Math.floor(Math.random() * 5000) + 1000);
     connection.query('INSERT INTO departments SET ?', {
@@ -100,20 +100,28 @@ const insertIntoDepts = (name) => {
 }
 
 
-
+//get total sales for each dept
 const getSales = () => {
+    //obj where we will store each dept and their total sales as key-value pairs
     let productSales = {};
+
     connection.query('SELECT * FROM products', function (err, results) {
+
         for (let i = 0; i < results.length; i++) {
+            //if there is not a property with the name of 'dept_name' in productSales
             if (!productSales[results[i].dept_name]) {
+                //create a property with dept_name
+                //set its value to that row's product sales
                 productSales[results[i].dept_name] = results[i].product_sales;
             } else {
+                //increment that property's value with product sales
                 productSales[results[i].dept_name] += results[i].product_sales;
             }
         }
 
         //console.log(productSales);
 
+        //updates total sales column for every department
         for (let sales in productSales) {
             updateTotalSales(productSales[sales], sales);
 
@@ -124,6 +132,7 @@ const getSales = () => {
 
 }
 
+//Updates total sales column in the departments table
 const updateTotalSales = (totalSales, deptName) => {
     connection.query('UPDATE departments SET ? WHERE ?',
         [
@@ -148,6 +157,7 @@ const updateTotalSales = (totalSales, deptName) => {
 
 }
 
+//calculates total profits and prints the departments table with the total profits for each department
 const getTotalProfits = () => {
 
     connection.query('SELECT * FROM departments', function (err, results) {
@@ -160,13 +170,10 @@ const getTotalProfits = () => {
 
         console.table(results,totalProfits);
         //console.log(totalProfits);
-
-
-
     })
-
-
 }
+
+//prompts the user with questions about the department that will be added
 const createNewDept = () => {
     inquirer.prompt(
         [
@@ -189,11 +196,9 @@ const createNewDept = () => {
                 }
             }
         ]
-
-
     ).then(function (answer) {
         let cost = parseInt(answer.costs);
-
+        //inserts departmen and over head costs to the table
         connection.query('INSERT INTO departments SET ?', {
 
             department_name: answer.dept,
@@ -211,6 +216,7 @@ const createNewDept = () => {
     });
 }
 
+//passes callback function with setTimeout 
 const timeoutStart = (func, time) => {
     setTimeout(function () {
         func();
