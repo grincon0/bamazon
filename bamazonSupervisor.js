@@ -48,7 +48,7 @@ const start = () => {
 const getDeptsFromProducts = () => {
     let depts = [];
     connection.query('SELECT * FROM products', function (err, results) {
-        console.log(results);
+        //console.log(results);
         for (let i = 0; i < results.length; i++) {
             depts.push(results[i].dept_name);
 
@@ -65,7 +65,7 @@ const getDeptsFromProducts = () => {
         }
 
         let realDepts = Object.keys(count);
-        console.log(realDepts);
+        //console.log(realDepts);
         //for every deparment, inset each one into the 'departments table'
         for (let name of realDepts) {
             insertIntoDepts(name);
