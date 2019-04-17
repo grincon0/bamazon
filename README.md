@@ -30,7 +30,7 @@ If there are enough units of the products, then the order will go through!
 
 The application is really intuitive and easy to use.
 
-If you can to run the Mananger or Supervisor simply run:
+To view the Mananger or Supervisor versions of the application, simply run:
 
 `node bamazonManager.js`
 
