@@ -16,19 +16,16 @@ Let's start with running **bamazonCustomer.js**
 
 You should see the following interface:
 
-![bamazonCustomer Order Example 1](/instruc/bamazonC1.PNG)
+![bamazonCustomer Order Example 1](/instruc/bamazonC1.jpg)
 
 Now select an item you want to purchase.
 
-![bamazonCustomer Order Example 2](/instruc/bamazonC2.PNG)
-
 Type in the number of units you want to purchase.
-
-![bamazonCustomer Order Example 3](/instruc/bamazonC3.PNG)
 
 If there are enough units of the products, then the order will go through!
 
-![bamazonCustomer Order Example 3](/instruc/bamazonC3.PNG)
+![bamazonCustomer Order Example 2](/instruc/bamazonC3.png)
+
 
 
 The application is really intuitive and easy to use.
