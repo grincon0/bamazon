@@ -21,7 +21,7 @@ const startAndBuy = () => {
             name: 'choice',
             type: 'list',
             message:
-                'Welcome to BAMAZON \n Which of following items do you want to buy?',
+                '\n ------------------\n Welcome to BAMAZON \n ------------------\n Which of following items do you want to purchase?',
             choices: function () {
                 let products = [];
                 for (let i = 0; i < results.length; i++) {
@@ -33,7 +33,8 @@ const startAndBuy = () => {
         {
             name: 'units',
             type: 'input',
-            message: 'How many units of the product would you want to purchase?'
+            message: 
+            `\n ------------------ ------------------ ------------------\n How many units of the product would you want to purchase? \n ------------------ ------------------ ------------------\n`
 
         }
         ]).then(function (answer) {
@@ -79,7 +80,7 @@ const startAndBuy = () => {
                 );
 
             } else {
-                console.log('\nSorry. There are not enough units your purchase. \n Please try again later or select a different product to purchase.\n \n \n \n');
+                console.log('\nSorry. There are not enough units in stock your purchase. \n Please try again later or select a different product to purchase.\n \n \n \n');
                 setTimeout(function () {
                     startAndBuy();
                 }, 1500);
